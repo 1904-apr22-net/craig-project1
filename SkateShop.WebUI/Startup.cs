@@ -7,8 +7,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SkateShop.DataAccess.Entities;
+using SkateShop.DataAccess.Repositories;
+using SkateShop.Library.Interfaces;
+
 
 namespace SkateShop.WebUI
 {
@@ -30,7 +35,10 @@ namespace SkateShop.WebUI
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+            services.AddDbContext<SkateShopDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SkateShopDB")));
+        
+            services.AddScoped<ISkateShopRepository, SkateShopRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
