@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace SkateShop.Library.Interfaces
 {
-    public interface IStoreRepository : IDisposable
+    public interface ISkateShopRepository : IDisposable
     {
-        IEnumerable<Store> GetStores();
+        IEnumerable<Location> GetLocations();
         IEnumerable<Customer> GetCustomers();
         IEnumerable<Product> GetProducts();
         Customer GetCustomerById(int id);
-        Store GetStoreById(int id);
+        Location GetLocationById(int id);
         Order GetOrderById(int id);
         IEnumerable<Order> GetCustomerOrderHistory(int id);
         IEnumerable<Order> SortOrderHistoryByCheapest(int id);

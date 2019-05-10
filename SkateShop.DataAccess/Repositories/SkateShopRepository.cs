@@ -1,22 +1,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using StoreSim.Library.Interfaces;
-using StoreSim.Library.Models;
-using StoreSim.DataAccess.Entities;
+using SkateShop.Library.Interfaces;
+using SkateShop.Library.Models;
+using SkateShop.DataAccess.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StoreSim.DataAccess.Repositories
+namespace SkateShop.DataAccess.Repositories
 {
-    public class StoreRepository : IStoreRepository
+    public class SkateShopRepository : ISkateShopRepository
     {
         private readonly SkateShopDbContext _dbContext;
 
-        public StoreRepository(SkateShopDbContext dbContext) =>
+        public SkateShopRepository(SkateShopDbContext dbContext) =>
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
         
-        public IEnumerable<Library.Models.Store> GetStores()
+        public IEnumerable<Library.Models.Location> GetLocations()
         {
             IQueryable<Entities.Location> items = _dbContext.Location
                 .Include(i => i.InventoryItem)
@@ -46,7 +46,7 @@ namespace StoreSim.DataAccess.Repositories
             return Mapper.Map(items);
         }
 
-        public Library.Models.Store GetStoreById(int id) =>
+        public Library.Models.Location GetLocationById(int id) =>
             Mapper.Map(_dbContext.Location.Find(id));
         public Library.Models.Customer GetCustomerById(int id) =>
             Mapper.Map(_dbContext.Customer.Find(id));
@@ -74,7 +74,7 @@ namespace StoreSim.DataAccess.Repositories
             for(var i=0; i<cart.Count; i++)
             {
                 Entities.OrderItem newOI = new Entities.OrderItem();
-                newOI.ProductId = cart[i].Id;
+                newOI.ProductId = cart[i].ProductId;
                 newOI.OrderId = latestOrder.OrderId;
                 _dbContext.OrderItem.Add(newOI);
             }

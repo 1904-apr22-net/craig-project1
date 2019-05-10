@@ -32,7 +32,7 @@ namespace SkateShop.DataAccess
 
         public static Entities.Order Map(Library.Models.Order order) => new Entities.Order
         {
-            OrderId = order.Id,
+            OrderId = order.OrderId,
             CustomerId = order.CustomerId,
             LocationId = order.LocationId,
             Time = order.Time,
@@ -53,7 +53,7 @@ namespace SkateShop.DataAccess
 
         public static Entities.Product Map(Library.Models.Product product) => new Entities.Product
         {
-            ProductId = product.Id,
+            ProductId = product.ProductId,
             Name = product.Name,
             Price = (decimal)product.Price
         };
