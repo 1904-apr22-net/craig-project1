@@ -9,6 +9,7 @@ namespace SkateShop.Library.Interfaces
         IEnumerable<Location> GetLocations();
         IEnumerable<Customer> GetCustomers();
         IEnumerable<Product> GetProducts();
+        IEnumerable<Order> GetOrders();
         Customer GetCustomerById(int id);
         Location GetLocationById(int id);
         Order GetOrderById(int id);

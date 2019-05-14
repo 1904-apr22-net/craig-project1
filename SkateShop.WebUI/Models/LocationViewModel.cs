@@ -12,6 +12,17 @@ namespace SkateShop.WebUI.Models
         [Required]
         public string Address { get; set; }
 
-        //public IEnumerable<OrderViewModel> Orders { get; set; }
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string State { get; set; }
+
+        [Required]
+        public string Country { get; set; }
+
+
+
+        public List<OrderViewModel> Orders { get; set; }
     }
 }

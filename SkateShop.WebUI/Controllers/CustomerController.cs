@@ -4,43 +4,48 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using SkateShop.DataAccess.Repositories;
 using SkateShop.Library.Interfaces;
 using SkateShop.Library.Models;
 using SkateShop.WebUI.Models;
 
 namespace SkateShop.WebUI.Controllers
 {
-    public class LocationController : Controller
+    public class CustomerController : Controller
     {
-        public ISkateShopRepository Repo { get; }
+        public ISkateShopRepository Repo;
 
-        public LocationController(ISkateShopRepository repo) =>
-            Repo = repo ?? throw new ArgumentNullException(nameof(repo));
+        public CustomerController(ISkateShopRepository repo) =>
+            Repo = repo ?? throw new ArgumentNullException();
 
-        // GET: Location
+        // GET: Customer
         public ActionResult Index()
         {
-            IEnumerable<Location> locations = Repo.GetLocations();
-            IEnumerable<LocationViewModel> viewModels = locations.Select(x => new LocationViewModel
+            IEnumerable<Customer> customers = Repo.GetCustomers();
+            IEnumerable<CustomerViewModel> items = customers.Select(x => new CustomerViewModel
             {
+                CustomerId = x.CustomerId,
                 LocationId = x.LocationId,
-                Address = $"{x.Address}, {x.City}, {x.State}"
+                Address = $"{x.Address}, {x.City}, {x.State}, {x.Country}",
+                FirstName = x.FirstName,
+                LastName = x.LastName,
             });
-            return View(viewModels);
+            return View(items);
         }
 
-        // GET: Location/Details/5
+        // GET: Customer/Details/5
         public ActionResult Details(int id)
         {
-            Location location = Repo.GetLocationById(id);
-            var viewModel = new LocationViewModel
+            var customer = Repo.GetCustomerById(id);
+            var viewModel = new CustomerViewModel
             {
-                LocationId = location.LocationId,
-                Address = location.Address,
-                City = location.City,
-                State = location.State,
-                Country = location.Country,
-                Orders = location.Orders.Select(y => new OrderViewModel
+                CustomerId = customer.CustomerId,
+                LocationId = customer.LocationId,
+                Address = $"{customer.Address}, {customer.City}, {customer.State}, {customer.Country}",
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Orders = customer.Orders.Select(y => new OrderViewModel
                 {
                     OrderId = y.OrderId,
                     Time = y.Time,
@@ -51,13 +56,25 @@ namespace SkateShop.WebUI.Controllers
             return View(viewModel);
         }
 
-        // GET: Location/Create
+        // GET: Customer/Create
         public ActionResult Create()
         {
-            return View();
+            var customers = Repo.GetCustomers();
+            var locations = Repo.GetLocations();
+            OrderViewModel viewModel = new OrderViewModel();
+            foreach(Customer customer in customers)
+            {
+                viewModel.CustomerList.Add(new SelectListItem($"{customer.FirstName} {customer.LastName}", customer.CustomerId.ToString()));
+            }
+            foreach(Location location in locations)
+            {
+                viewModel.LocationList.Add(new SelectListItem($"{location.City} {location.State}", location.LocationId.ToString()));
+            }
+
+            return View(viewModel);
         }
 
-        // POST: Location/Create
+        // POST: Customer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -74,13 +91,13 @@ namespace SkateShop.WebUI.Controllers
             }
         }
 
-        // GET: Location/Edit/5
+        // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Location/Edit/5
+        // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -97,13 +114,13 @@ namespace SkateShop.WebUI.Controllers
             }
         }
 
-        // GET: Location/Delete/5
+        // GET: Customer/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Location/Delete/5
+        // POST: Customer/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

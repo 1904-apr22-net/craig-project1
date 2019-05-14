@@ -30,6 +30,13 @@ namespace SkateShop.DataAccess.Repositories
                             .ThenInclude(p => p.Product);
             return Mapper.Map(items);
         }
+        public IEnumerable<Library.Models.Order> GetOrders()
+        {
+            IQueryable<Entities.Order> items = _dbContext.Order
+                .Include(c => c.Customer)
+                .Include(l => l.Location);
+            return Mapper.Map(items);
+        }
         public IEnumerable<Library.Models.Customer> GetCustomers()
         {
             IQueryable<Entities.Customer> items = _dbContext.Customer
@@ -46,13 +53,26 @@ namespace SkateShop.DataAccess.Repositories
             return Mapper.Map(items);
         }
 
-        public Library.Models.Location GetLocationById(int id) =>
-            Mapper.Map(_dbContext.Location.Find(id));
-        public Library.Models.Customer GetCustomerById(int id) =>
-            Mapper.Map(_dbContext.Customer.Find(id));
-        public Library.Models.Order GetOrderById(int id) =>
-            Mapper.Map(_dbContext.Order.Find(id));
+        public Library.Models.Location GetLocationById(int id)
+        {
+            Entities.Location location = _dbContext.Location.Include(o => o.Order)
+                .AsNoTracking().First(l => l.LocationId == id);
+            return Mapper.Map(location);
+        }
 
+        public Library.Models.Customer GetCustomerById(int id)
+        {
+            Entities.Customer customer = _dbContext.Customer.Include(o => o.Order)
+                .AsNoTracking().First(c => c.CustomerId == id);
+            return Mapper.Map(customer);
+        }
+
+        public Library.Models.Order GetOrderById(int id)
+        {
+            Entities.Order order = _dbContext.Order.Include(o => o.OrderItem).ThenInclude(p => p.Product)
+                .AsNoTracking().First(o => o.OrderId == id);
+            return Mapper.Map(order);
+        }
 
         public IEnumerable<Library.Models.Order> SortOrderHistoryByCheapest(int id) =>
             Mapper.Map(_dbContext.Location.Find(id).Order.OrderBy(t => t.Total)).ToList();

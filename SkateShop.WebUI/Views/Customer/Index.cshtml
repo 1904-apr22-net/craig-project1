@@ -1,17 +1,23 @@
-﻿@model IEnumerable<SkateShop.WebUI.Models.LocationViewModel>
+﻿@model IEnumerable<SkateShop.WebUI.Models.CustomerViewModel>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Locations</h1>
+<h1>Customers</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LocationId)
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Address)
@@ -19,16 +25,20 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.LocationId)
+                @Html.DisplayFor(model => item.CustomerId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Address)
+                @Html.DisplayFor(model => item.FirstName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State)
+                @Html.DisplayFor(model => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Address)
             </td>
             <td>
                 @*Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
@@ -36,6 +46,6 @@
                 @*Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
