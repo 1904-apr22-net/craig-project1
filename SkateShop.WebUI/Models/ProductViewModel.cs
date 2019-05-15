@@ -13,6 +13,7 @@ namespace SkateShop.WebUI.Models
 
         public string Name;
 
+       [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Price;
     }
 }

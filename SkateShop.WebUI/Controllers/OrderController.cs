@@ -78,6 +78,11 @@ namespace SkateShop.WebUI.Controllers
             foreach(Product product in products)
             {
                 viewModel.Products.Add(new ProductViewModel { Name = product.Name, Price = (decimal)product.Price, ProductId = product.ProductId });
+                viewModel.Cart.Add(product.Name, 0);
+            }
+            for(int i=0; i<= 10; i++)
+            {
+                viewModel.QuantityList.Add(new SelectListItem(i.ToString(), i.ToString()));
             }
 
             return View(viewModel);
@@ -86,27 +91,48 @@ namespace SkateShop.WebUI.Controllers
         // POST: Order/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(OrderViewModel viewModel)
         {
             try
             {
-                var cart = new List<Product>();
-                cart.Add(new Product { ProductId = 1, Name = "Deck", Price = 29.99 });
-                var order = new Order
+                if (ModelState.IsValid)
                 {
-                    LocationId = 1,
-                    CustomerId = 1,
-                    Time = DateTime.Now,
-                    Quantity = 1,
-                    Total = (decimal)12.99,
-                    Products = cart
-                };
-                Repo.PlaceOrder(order, cart);
+                    List<Product> cart = new List<Product>();
+                    int quantity = 0;
+                    decimal total = 0;
+                    foreach(KeyValuePair<string, int> item in viewModel.Cart)
+                    {
+                        if(item.Value != 0)
+                        {
+                            for(int i=0; i<item.Value; i++)
+                            {
+                                cart.Add(Repo.GetProducts().Where(x => x.Name == item.Key).FirstOrDefault());
+                                quantity++;
+                                total += (decimal)cart[i].Price;
+                            }
+                        }
+                    }
+                    int.TryParse(viewModel.LocationId, out var locationId);
+                    int.TryParse(viewModel.CustomerId, out var customerId);
+                    var order = new Order()
+                    {
+                        LocationId = locationId,
+                        CustomerId = customerId,
+                        Time = DateTime.Now,
+                        Quantity = quantity,
+                        Total = total
+                    };
+                    foreach(Product product in cart)
+                    {
+                        order.Products.Add(product);
+                    }
+                    Repo.PlaceOrder(order, cart);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(viewModel);
             }
         }
 

@@ -14,6 +14,8 @@ namespace SkateShop.WebUI.Models
         {
             CustomerList = new List<SelectListItem>();
             LocationList = new List<SelectListItem>();
+            QuantityList = new List<SelectListItem>();
+            Cart = new Dictionary<string, int>();
             Products = new List<ProductViewModel>();
         }
 
@@ -41,5 +43,9 @@ namespace SkateShop.WebUI.Models
         public List<SelectListItem> CustomerList { get; set; }
 
         public List<SelectListItem> LocationList { get; set; }
+
+        public List<SelectListItem> QuantityList { get; set; }
+
+        public Dictionary<string, int> Cart { get; set; }
     }
 }
