@@ -31,8 +31,8 @@ steps:
     zipAfterPublish: True
 - task: AzureRmWebAppDeployment@3
   inputs:
-    azureSubscription: '<Azure service connections>'
-    WebAppName: '<Name of web app>'
+    azureSubscription: 'craig-project1connection'
+    WebAppName: 'craigosskateshop'
     Package: '$(System.DefaultWorkingDirectory)'
     GenerateWebConfig: true
     WebConfigParameters: '-Handler iisnode -NodeStartFile server.js -appType node'
