@@ -90,8 +90,9 @@ namespace SkateShop.DataAccess.Repositories
         {
             Entities.Order newOrder = Mapper.Map(order);
             _dbContext.Add(newOrder);
-            var latestOrder = _dbContext.Order.OrderByDescending(id => id.OrderId).First();
-            for(var i=0; i<cart.Count; i++)
+            Save();
+            var latestOrder = _dbContext.Order.OrderByDescending(x => x.OrderId).First();
+            for (var i=0; i<cart.Count; i++)
             {
                 Entities.OrderItem newOI = new Entities.OrderItem();
                 newOI.ProductId = cart[i].ProductId;
