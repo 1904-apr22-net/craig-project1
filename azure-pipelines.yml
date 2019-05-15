@@ -23,11 +23,11 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
--script: dotnet test --configuration $(buildConfiguration) 
+- script: 'dotnet test --configuration $(buildConfiguration) 
   /p:CollectCoverage=true 
   /p:CoverletOutputFormat=opencover 
-  /p:CoverletOutput='$(Build.ArtifactStagingDirectory)/coverage/' 
-  /p:Exclude="[xunit*]*"
+  /p:CoverletOutput='$(Build.ArtifactStagingDirectory)/coverage/
+  /p:Exclude="[xunit*]*'
 
 - task: SonarCloudAnalyze@1
   inputs: {}
