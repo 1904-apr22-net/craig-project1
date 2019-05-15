@@ -7,13 +7,12 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet restore
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
@@ -24,13 +23,14 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    publishWebProjects: True
+    publishWebProjects: False
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
-- task: AzureRmWebAppDeployment@3
+- task: AzureRmWebAppDeployment@4
   inputs:
+    ConnectionType: 'AzureRM'
     azureSubscription: 'craig-project1connection'
+    appType: 'webApp'
     WebAppName: 'craigosskateshop'
-    Package: '$(Build.ArtifactStagingDirectory)'
-    GenerateWebConfig: true
-    WebConfigParameters: '-Handler iisnode -NodeStartFile server.js -appType node'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+
