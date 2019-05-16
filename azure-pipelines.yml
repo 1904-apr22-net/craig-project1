@@ -51,3 +51,8 @@ steps:
     WebAppName: 'craigosskateshop'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
