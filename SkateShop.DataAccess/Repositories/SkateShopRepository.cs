@@ -100,20 +100,8 @@ namespace SkateShop.DataAccess.Repositories
                 _dbContext.OrderItem.Add(newOI);
             }
 
-            //UpdateInventory(order.LocationId, cart);
             Save();
         }
-
-        /* private void UpdateInventory(int locationId, List<Product> cart)
-        {
-            for(var i=0; i<cart.Count; i++)
-            {
-                if(cart[i].ProductId == 7)
-                {
-                    IEnumerable<InventoryItem> allInventory = _dbContext.InventoryItem
-                }
-            }
-        }*/
 
         public void Save()
         {//comment
